@@ -24,6 +24,8 @@ import MultiInput from "@/components/assets/multi-input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import clearCachesByServerAction from "@/utils/revalidate";
+import { useState } from "react";
 
 interface Props {
   editRecipe?: Recipe;
@@ -49,6 +51,7 @@ const formSchema = z.object({
 
 const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,6 +72,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
   });
 
   const handleFormSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
     const supabase = createClient();
     // e.preventDefault();
 
@@ -99,6 +103,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
       if (error) throw error;
       const id = newRecipe.id;
       // setRecipeData(initialRecipeData);
+      clearCachesByServerAction(`/${id}`);
       router.push(`/${id}`);
     } catch (error) {
       // newRecipe.author_id = session.user.id;
@@ -109,6 +114,8 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
 
       alert("Error updating the data!");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -242,6 +249,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
         />
 
         <Button type="submit" className="w-full">
+          {loading && <span className="animate-spin mr-2">⏳</span>}
           {editRecipe ? "Update Recipe" : "Create Recipe"}
         </Button>
       </form>

@@ -56,7 +56,7 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
     return <div>Recipe not found!</div>;
   }
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-between mb-4">
         <Link href="/">
           <Button variant="secondary">Go Back</Button>
