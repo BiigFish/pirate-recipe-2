@@ -23,10 +23,11 @@ import MultiComplexInput from "@/components/assets/multi-complex-input";
 import MultiInput from "@/components/assets/multi-input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Props {
   editRecipe?: Recipe;
+  userId: string;
 }
 
 const formSchema = z.object({
@@ -46,53 +47,26 @@ const formSchema = z.object({
   yield: z.string(),
 });
 
-// const categoryOptions = [
-//   "breakfast",
-//   "meal",
-//   "snack",
-//   "dessert",
-//   "drink",
-//   "soup",
-//   "baking",
-//   "other",
-// ];
-
-const RecipeForm: React.FC<Props> = ({ editRecipe }) => {
+const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       active_cook_time: editRecipe?.active_cook_time || undefined,
       category: editRecipe?.category || undefined,
       description: editRecipe?.description || undefined,
-      ingredients: editRecipe?.ingredients || [{ amount: "", ingredient: "" }],
-      instructions: editRecipe?.instructions || [""],
+      ingredients: editRecipe?.ingredients
+        ? [...editRecipe?.ingredients, { amount: "", ingredient: "" }]
+        : [{ amount: "", ingredient: "" }],
+      instructions: editRecipe?.instructions
+        ? [...editRecipe.instructions, ""]
+        : [""],
       name: editRecipe?.name || "",
-      notes: editRecipe?.notes || [""],
+      notes: editRecipe?.notes ? [...editRecipe.notes, ""] : [""],
       passive_cook_time: editRecipe?.passive_cook_time || undefined,
       yield: editRecipe?.yield || undefined,
     },
   });
-
-  // const initialRecipeData: Recipe = editRecipe || {
-  //   author_id: "",
-  //   active_cook_time: null,
-  //   category: null,
-  //   description: null,
-  //   id: Math.floor(Math.random() * 1000000000),
-  //   ingredients: [{ amount: "", ingredient: "" }],
-  //   instructions: [""],
-  //   name: "",
-  //   notes: [""],
-  //   passive_cook_time: null,
-  //   yield: null,
-  // };
-
-  //   const handleInputChange = (
-  //     name: string,
-  //     value: string | string[] | Ingredient[]
-  //   ) => {
-  //     setRecipeData({ ...recipeData, [name]: value });
-  //   };
 
   const handleFormSubmit = async (values: z.infer<typeof formSchema>) => {
     const supabase = createClient();
@@ -109,11 +83,11 @@ const RecipeForm: React.FC<Props> = ({ editRecipe }) => {
     // }
     try {
       const newRecipe: Recipe = {
-        author_id: "",
+        author_id: editRecipe?.author_id || userId,
         active_cook_time: values.active_cook_time,
         category: values.category,
         description: values.description,
-        id: Math.floor(Math.random() * 1000000000).toString(),
+        id: editRecipe?.id || Math.floor(Math.random() * 1000000000).toString(),
         ingredients: values.ingredients.slice(0, -1),
         instructions: values.instructions.slice(0, -1),
         name: values.name,
