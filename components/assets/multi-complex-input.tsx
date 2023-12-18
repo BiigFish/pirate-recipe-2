@@ -14,12 +14,11 @@ interface Ingredient {
 }
 
 interface Props {
-  label?: string;
   values: Ingredient[];
   setValues: (v: Ingredient[]) => void;
 }
 
-const MultiComplexInput: React.FC<Props> = ({ label, values, setValues }) => {
+const MultiComplexInput: React.FC<Props> = ({ values, setValues }) => {
   const handleRemoveValue = (index: number) => {
     const newValues = [...values];
     newValues.splice(index, 1);
@@ -54,7 +53,6 @@ const MultiComplexInput: React.FC<Props> = ({ label, values, setValues }) => {
   };
   return (
     <div>
-      <p>{label}</p>
       <div className="flex ml-7 justify-between w-7/12 md:w-[415px]">
         <p>Amount</p>
         <p>Ingredient</p>

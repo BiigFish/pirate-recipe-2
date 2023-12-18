@@ -7,12 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 interface Props {
-  label?: string;
   values: string[];
   setValues: (v: string[]) => void;
 }
 
-const MultiInput: React.FC<Props> = ({ label, values, setValues }) => {
+const MultiInput: React.FC<Props> = ({ values, setValues }) => {
   const handleRemoveValue = (index: number) => {
     const newValues = [...values];
     newValues.splice(index, 1);
@@ -43,7 +42,6 @@ const MultiInput: React.FC<Props> = ({ label, values, setValues }) => {
   };
   return (
     <div>
-      <p>{label}</p>
       {values.map((value, index) => (
         <div
           key={index}

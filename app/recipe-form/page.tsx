@@ -34,7 +34,7 @@ const RecipeFormPage = async ({
   }
 
   return (
-    <div>
+    <div className="w-full">
       <Button variant="secondary" asChild>
         <Link href={recipeData ? `/${searchParams.recipeId}` : "/"}>
           Go Back

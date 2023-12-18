@@ -199,7 +199,6 @@ const RecipeForm: React.FC<Props> = ({ editRecipe }) => {
               <FormLabel>Ingredients</FormLabel>
               <FormControl>
                 <MultiComplexInput
-                  label="Ingredients"
                   values={field.value}
                   setValues={field.onChange}
                 />
@@ -214,11 +213,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe }) => {
             <FormItem>
               <FormLabel>Instructions</FormLabel>
               <FormControl>
-                <MultiInput
-                  label="Instructions"
-                  values={field.value}
-                  setValues={field.onChange}
-                />
+                <MultiInput values={field.value} setValues={field.onChange} />
               </FormControl>
             </FormItem>
           )}
@@ -266,11 +261,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe }) => {
             <FormItem>
               <FormLabel>Notes</FormLabel>
               <FormControl>
-                <MultiInput
-                  label="Notes"
-                  values={field.value}
-                  setValues={field.onChange}
-                />
+                <MultiInput values={field.value} setValues={field.onChange} />
               </FormControl>
             </FormItem>
           )}
