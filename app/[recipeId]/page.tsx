@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
+import supabase from "@/utils/supabase/supabase";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -33,6 +34,14 @@ export async function generateMetadata({
   };
 }
 
+export async function generateStaticParams() {
+  const { data: recipes } = await supabase.from("recipes").select("id");
+
+  return recipes?.map(({ id }) => ({
+    id,
+  }));
+}
+
 const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
@@ -41,7 +50,7 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
     .select("*")
     .eq("id", params.recipeId);
   if (recipeError) {
-    alert("Error loading recipe!");
+    console.log("Error loading recipe!");
   }
 
   const {
