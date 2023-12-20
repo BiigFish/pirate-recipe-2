@@ -33,18 +33,19 @@ const Home = async () => {
             key={category}
             className="border border-black rounded-lg px-4"
           >
-            <legend className=" capitalize font-bold">{category}</legend>
-            <ul className="space-y-2">
+            <legend className="text-lg capitalize font-bold">{category}</legend>
+            <ul className="space-y-3">
               {data
                 .filter((d) => d.category === category)
                 .map((recipe, index) => (
-                  <Link
-                    key={index}
-                    href={recipe.id.toString()}
-                    className="w-fit block"
-                  >
-                    <li>{recipe.name}</li>
-                  </Link>
+                  <li key={index}>
+                    <Link
+                      href={recipe.id.toString()}
+                      className="w-fit block text-lg"
+                    >
+                      {recipe.name}
+                    </Link>
+                  </li>
                 ))}
             </ul>
           </fieldset>

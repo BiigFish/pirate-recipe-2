@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center max-w-3xl mx-2 md:mx-auto">
-          <header className="relative w-full">
+          <header className="my-2 relative w-full">
             <Link href="/" className="w-fit block sm:mx-auto">
               <h1 className="text-4xl font-bold ">Pirate Recipe</h1>
             </Link>
