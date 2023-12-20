@@ -48,7 +48,6 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
     data: { user },
     error,
   } = await supabase.auth.getUser();
-  console.log("aaa", user, error);
   const userId = user?.id;
 
   const recipeData: Recipe | undefined = data ? data[0] : undefined;
