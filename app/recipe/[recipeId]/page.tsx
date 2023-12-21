@@ -3,7 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { Recipe } from "../models/recipes";
+import { Recipe } from "../../models/recipes";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -41,7 +42,7 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
     .select("*")
     .eq("id", params.recipeId);
   if (recipeError) {
-    alert("Error loading recipe!");
+    console.log("Error loading recipe!");
   }
 
   const {
@@ -53,7 +54,7 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
 
   const recipeData: Recipe | undefined = data ? data[0] : undefined;
   if (!recipeData) {
-    return <div>Recipe not found!</div>;
+    notFound();
   }
   return (
     <div className="w-full">

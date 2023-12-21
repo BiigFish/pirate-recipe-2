@@ -61,7 +61,7 @@ const RecipeFormPage = async ({
   return (
     <div className="w-full">
       <Button variant="secondary" asChild>
-        <Link href={recipeData ? `/${searchParams.recipeId}` : "/"}>
+        <Link href={recipeData ? `recipe/${searchParams.recipeId}` : "/"}>
           Go Back
         </Link>
       </Button>

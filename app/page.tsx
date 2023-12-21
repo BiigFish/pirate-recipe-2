@@ -40,7 +40,7 @@ const Home = async () => {
                 .map((recipe, index) => (
                   <li key={index}>
                     <Link
-                      href={recipe.id.toString()}
+                      href={`recipe/${recipe.id.toString()}`}
                       className="w-fit block text-lg"
                     >
                       {recipe.name}
