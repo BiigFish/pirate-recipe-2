@@ -2,6 +2,7 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Link from "next/link";
 import LoginButton from "@/components/assets/login-button";
+import UserWrapper from "@/components/wrappers/user-wrapper";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -22,13 +23,15 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center max-w-3xl mx-2 md:mx-auto">
-          <header className="my-2 relative w-full">
-            <Link href="/" className="w-fit block sm:mx-auto">
-              <h1 className="text-4xl font-bold ">Pirate Recipe</h1>
-            </Link>
-            <LoginButton />
-          </header>
-          {children}
+          <UserWrapper>
+            <header className="my-2 relative w-full">
+              <Link href="/" className="w-fit block sm:mx-auto">
+                <h1 className="text-4xl font-bold ">Pirate Recipe</h1>
+              </Link>
+              <LoginButton />
+            </header>
+            {children}
+          </UserWrapper>
         </main>
       </body>
     </html>
