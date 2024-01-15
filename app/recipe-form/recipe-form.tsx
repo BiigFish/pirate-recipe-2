@@ -103,8 +103,8 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
       if (error) throw error;
       const id = newRecipe.id;
       // setRecipeData(initialRecipeData);
-      clearCachesByServerAction(`/${id}`);
-      router.push(`/${id}`);
+      clearCachesByServerAction(`/recipe/${id}`);
+      router.push(`/recipe/${id}`);
     } catch (error) {
       // newRecipe.author_id = session.user.id;
       //   recipeData.created_at = new Date().toISOString();
