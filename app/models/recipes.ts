@@ -8,8 +8,8 @@ export interface Recipe {
   instructions: string[];
   notes: string[];
   ingredients: Ingredient[];
-  category: Category;
   author_id: string;
+  tags: string[];
 }
 
 export interface Ingredient {
@@ -17,13 +17,13 @@ export interface Ingredient {
   ingredient: string;
 }
 
-export enum Category {
-  BREAKFAST = "Breakfast",
-  MEAL = "Meal",
-  SNACK = "Snack",
-  DESSERT = "Dessert",
-  DRINK = "Drink",
-  SOUP = "Soup",
-  BAKING = "Baking",
-  OTHER = "Other",
-}
+export const Tags = [
+  "Breakfast",
+  "Meal",
+  "Snack",
+  "Dessert",
+  "Drink",
+  "Soup",
+  "Baking",
+  "Sauce",
+];
