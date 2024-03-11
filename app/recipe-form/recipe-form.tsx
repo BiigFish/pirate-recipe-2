@@ -27,7 +27,7 @@ interface Props {
 }
 
 const formSchema = z.object({
-  active_cook_time: z.string(),
+  active_cook_time: z.string().optional(),
   tags: z.string().array(),
   description: z.string(),
   ingredients: z
@@ -39,7 +39,7 @@ const formSchema = z.object({
   instructions: z.string().array(),
   name: z.string(),
   notes: z.string().array(),
-  passive_cook_time: z.string(),
+  passive_cook_time: z.string().optional(),
   yield: z.string(),
 });
 
@@ -82,7 +82,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
     try {
       const newRecipe: Recipe = {
         author_id: editRecipe?.author_id || userId,
-        active_cook_time: values.active_cook_time,
+        active_cook_time: values.active_cook_time || "-",
         tags: values.tags,
         description: values.description,
         id: editRecipe?.id || Math.floor(Math.random() * 1000000000).toString(),
@@ -90,7 +90,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
         instructions: values.instructions.slice(0, -1),
         name: values.name,
         notes: values.notes.slice(0, -1),
-        passive_cook_time: values.passive_cook_time,
+        passive_cook_time: values.passive_cook_time || "-",
         yield: values.yield,
       };
       const { error } = await supabase.from("recipes").upsert(newRecipe);
