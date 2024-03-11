@@ -69,8 +69,15 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
         )}
       </div>
       <h1 className="text-3xl font-bold">{recipeData.name}</h1>
-      <div className="border rounded-lg px-1 capitalize text-sm border-black w-fit">
-        {recipeData.category}
+      <div className="flex gap-x-1">
+        {recipeData.tags?.map((tag, index) => (
+          <div
+            key={index}
+            className="border rounded-lg px-1 capitalize text-sm border-black w-fit"
+          >
+            {tag}
+          </div>
+        ))}
       </div>
       <p className="my-4">{recipeData.description}</p>
       <div className="border border-black p-2.5 space-y-2 mb-6">

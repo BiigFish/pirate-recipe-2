@@ -1,14 +1,20 @@
+import ListControls from "@/components/home/list-controls";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-const Home = async () => {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { tag: string };
+}) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
   const { data, error } = await supabase
     .from("recipes")
-    .select("name, id, category");
+    .select("name, id, tags")
+    .order("name", { ascending: true });
 
   if (error) {
     alert("Error loading recipes!");
@@ -18,40 +24,32 @@ const Home = async () => {
     return <div>Loading...</div>;
   }
 
-  const uniqueValues: Set<string> = new Set<string>();
-  data.forEach((recipe) => {
-    if (recipe.category) {
-      uniqueValues.add(recipe.category);
-    }
-  });
+  const tagSearch = searchParams.tag || undefined;
 
   return (
-    <div className="space-y-4 w-full">
-      {data &&
-        Array.from(uniqueValues).map((category: string) => (
-          <fieldset
-            key={category}
-            className="border border-black rounded-lg px-4"
-          >
-            <legend className="text-lg capitalize font-bold">{category}</legend>
-            <ul className="space-y-3">
-              {data
-                .filter((d) => d.category === category)
-                .map((recipe, index) => (
-                  <li key={index}>
-                    <Link
-                      href={`recipe/${recipe.id.toString()}`}
-                      className="w-fit block text-lg"
-                    >
-                      {recipe.name}
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          </fieldset>
-        ))}
+    <div className="my-10 w-full">
+      <ListControls searchParams={searchParams} />
+      <div className="space-y-4 mt-4">
+        <ul className="space-y-3">
+          {data
+            .filter((recipe) => {
+              if (tagSearch) {
+                return recipe.tags.includes(tagSearch);
+              }
+              return true;
+            })
+            .map((recipe, index) => (
+              <li key={index}>
+                <Link
+                  href={`recipe/${recipe.id.toString()}`}
+                  className="w-fit block text-lg"
+                >
+                  {recipe.name}
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </div>
     </div>
   );
-};
-
-export default Home;
+}

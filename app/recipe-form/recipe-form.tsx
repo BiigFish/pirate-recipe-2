@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Category, Recipe } from "../models/recipes";
+import { Tags, Recipe } from "../models/recipes";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,13 +12,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import MultiComplexInput from "@/components/assets/multi-complex-input";
 import MultiInput from "@/components/assets/multi-input";
 import { Button } from "@/components/ui/button";
@@ -26,6 +19,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import clearCachesByServerAction from "@/utils/revalidate";
 import { useState } from "react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface Props {
   editRecipe?: Recipe;
@@ -34,7 +28,7 @@ interface Props {
 
 const formSchema = z.object({
   active_cook_time: z.string(),
-  category: z.nativeEnum(Category),
+  tags: z.string().array(),
   description: z.string(),
   ingredients: z
     .object({
@@ -56,7 +50,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       active_cook_time: editRecipe?.active_cook_time || undefined,
-      category: editRecipe?.category || undefined,
+      tags: editRecipe?.tags || undefined,
       description: editRecipe?.description || undefined,
       ingredients: editRecipe?.ingredients
         ? [...editRecipe?.ingredients, { amount: "", ingredient: "" }]
@@ -89,7 +83,7 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
       const newRecipe: Recipe = {
         author_id: editRecipe?.author_id || userId,
         active_cook_time: values.active_cook_time,
-        category: values.category,
+        tags: values.tags,
         description: values.description,
         id: editRecipe?.id || Math.floor(Math.random() * 1000000000).toString(),
         ingredients: values.ingredients.slice(0, -1),
@@ -151,24 +145,24 @@ const RecipeForm: React.FC<Props> = ({ editRecipe, userId }) => {
         />
         <FormField
           control={form.control}
-          name="category"
+          name="tags"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.values(Category).map((category, index) => (
-                    <SelectItem key={index} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FormLabel>Tags</FormLabel>
+              <ToggleGroup
+                value={field.value}
+                defaultValue={field.value}
+                type="multiple"
+                onValueChange={field.onChange}
+                variant="outline"
+                className="justify-start"
+              >
+                {Tags.map((tag, index) => (
+                  <ToggleGroupItem key={index} value={tag}>
+                    {tag}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
             </FormItem>
           )}
         />
