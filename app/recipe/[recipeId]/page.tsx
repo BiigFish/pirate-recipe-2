@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { Recipe } from "../../models/recipes";
 import { notFound } from "next/navigation";
+import Fav from "./fav";
 
 export async function generateMetadata({
   params,
@@ -49,7 +50,9 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
     data: { user },
     error,
   } = await supabase.auth.getUser();
-  console.log("aaa", user, error);
+  if (error) {
+    console.log("Error loading user!", error);
+  }
   const userId = user?.id;
 
   const recipeData: Recipe | undefined = data ? data[0] : undefined;
@@ -68,7 +71,10 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
           </Link>
         )}
       </div>
-      <h1 className="text-3xl font-bold">{recipeData.name}</h1>
+      <div className="flex gap-x-2 items-center">
+        <h1 className="text-3xl font-bold">{recipeData.name}</h1>
+        <Fav recipeId={params.recipeId} />
+      </div>
       <div className="flex gap-x-1">
         {recipeData.tags?.map((tag, index) => (
           <div
