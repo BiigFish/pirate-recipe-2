@@ -114,7 +114,7 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
         )}
         <h2 className="text-2xl font-bold">Instructions</h2>
         {recipeData.instructions && recipeData.instructions.length > 0 && (
-          <ol className="list-decimal list-inside">
+          <ol className="list-decimal list-outside pl-5">
             {recipeData.instructions.map((instruction, index) => (
               <li key={index}>{instruction}</li>
             ))}
@@ -123,7 +123,7 @@ const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
         {recipeData.notes && recipeData.notes.length > 0 && (
           <>
             <h2 className="text-2xl font-bold">Notes</h2>
-            <ol className="list-decimal list-inside">
+            <ol className="list-decimal list-outside pl-5">
               {recipeData.notes.map((note, index) => (
                 <li key={index}>{note}</li>
               ))}

@@ -11,7 +11,7 @@ interface Props {
 }
 
 const ListControls: React.FC<Props> = ({ searchParams }) => {
-  const tagParam = searchParams?.tag || "";
+  const tagParam = searchParams?.tag || "All";
   const router = useRouter();
 
   const changeTag = (tag: string) => {
