@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   DropdownMenu,
@@ -5,8 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGear,
@@ -15,27 +15,22 @@ import {
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { useUserStore } from "@/stores/user-store";
 
 config.autoAddCss = false;
 
-export default async function LoginButton() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+export default function LoginButton() {
+  const { user, setUser } = useUserStore();
+  const router = useRouter();
 
   const signOut = async () => {
-    "use server";
-
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     await supabase.auth.signOut();
-    return redirect("/");
+    setUser(undefined);
+    router.refresh();
   };
 
   return (
@@ -45,7 +40,7 @@ export default async function LoginButton() {
           Menu <FontAwesomeIcon icon={faHamburger} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="bg-white">
-          {session ? (
+          {user ? (
             <>
               <Link href="/recipe-form">
                 <DropdownMenuItem className="focus:bg-foreground focus:text-background">
