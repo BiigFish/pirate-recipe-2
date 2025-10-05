@@ -52,8 +52,8 @@ const ListControls: React.FC<Props> = ({ searchParams, loggedIn }) => {
           variant="outline"
           className="justify-start flex-wrap"
         >
-          <ToggleGroupItem value={"All Recipes"}>All</ToggleGroupItem>
-          <ToggleGroupItem value={"My Recipes"}>Mine</ToggleGroupItem>
+          <ToggleGroupItem value={"All"}>All Recipes</ToggleGroupItem>
+          <ToggleGroupItem value={"Mine"}>My Recipes</ToggleGroupItem>
         </ToggleGroup>
       </div>
         )}      
