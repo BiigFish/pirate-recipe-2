@@ -1,23 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
+import { getUser } from "@/utils/supabase/queries";
 import { Metadata } from "next";
+import { cache } from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { Recipe } from "../../models/recipes";
 import { notFound } from "next/navigation";
+
+const getRecipe = cache(async (recipeId: string): Promise<Recipe | null> => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data } = await supabase
+    .from("recipes")
+    .select("*")
+    .eq("id", recipeId)
+    .single();
+  return (data as Recipe) ?? null;
+});
 
 export async function generateMetadata({
   params,
 }: {
   params: { recipeId: string };
 }): Promise<Metadata> {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data } = await supabase
-    .from("recipes")
-    .select("name, description")
-    .eq("id", params.recipeId);
-  const recipe = data ? data[0] : undefined;
+  const recipe = await getRecipe(params.recipeId);
 
   const description = recipe?.description || "";
   const title = recipe?.name;
@@ -35,27 +42,16 @@ export async function generateMetadata({
 }
 
 const RecipePage = async ({ params }: { params: { recipeId: string } }) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data, error: recipeError } = await supabase
-    .from("recipes")
-    .select("*")
-    .eq("id", params.recipeId);
-  if (recipeError) {
-    console.log("Error loading recipe!");
-  }
+  const [recipeData, user] = await Promise.all([
+    getRecipe(params.recipeId),
+    getUser(),
+  ]);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  console.log("aaa", user, error);
-  const userId = user?.id;
-
-  const recipeData: Recipe | undefined = data ? data[0] : undefined;
   if (!recipeData) {
     notFound();
   }
+
+  const userId = user?.id;
   return (
     <div className="w-full">
       <div className="flex justify-between mb-4">

@@ -1,5 +1,6 @@
 import ListControls from "@/components/home/list-controls";
 import { createClient } from "@/utils/supabase/server";
+import { getUser } from "@/utils/supabase/queries";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -11,8 +12,7 @@ export default async function Home({
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  // Get current user
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getUser();
 
   const { data, error } = await supabase
     .from("recipes")
@@ -32,7 +32,7 @@ export default async function Home({
 
   return (
     <div className="my-10 w-full">
-        <ListControls searchParams={searchParams} loggedIn={!!user} />
+      <ListControls searchParams={searchParams} loggedIn={!!user} />
       <div className="space-y-4 mt-4">
         <ul className="space-y-3">
           {data
@@ -42,14 +42,14 @@ export default async function Home({
                   return false;
                 }
               }
-              
+
               // Filter by owner
               if (ownerSearch === "Mine") {
                 if (!user || recipe.author_id !== user.id) {
                   return false;
                 }
               }
-              
+
               return true;
             })
             .map((recipe, index) => (

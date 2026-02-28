@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { getUser } from "@/utils/supabase/queries";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGear,
@@ -22,12 +23,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 
 export default async function LoginButton() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const user = await getUser();
 
   const signOut = async () => {
     "use server";
@@ -45,7 +41,7 @@ export default async function LoginButton() {
           Menu <FontAwesomeIcon icon={faHamburger} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="bg-white">
-          {session ? (
+          {user ? (
             <>
               <Link href="/recipe-form">
                 <DropdownMenuItem className="focus:bg-foreground focus:text-background">
